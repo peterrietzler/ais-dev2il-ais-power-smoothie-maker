@@ -1,4 +1,4 @@
-# AI's Power Smoothie Maker
+# AIS DEV2IL 😈 Power Smoothie Maker
 
 Welcome to the AIS Power Smoothie Maker exercise! Ready to blend up some Python skills? This exercise will guide you through a simple project, showing you why dependency management is crucial and how `uv` can make your life easier with zero-configuration environments.
 
