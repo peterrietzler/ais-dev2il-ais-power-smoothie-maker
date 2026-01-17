@@ -91,6 +91,10 @@ project in the `.venv` directory.
 
 Have a look at the `pyproject.toml` file to see that the `rich` library is now listed as a dependency.
 
+💡If you are more comfortable with editing the `pyproject.toml` file directly, you can also do that. 
+You could have simply added the `rich` dependency to the `dependencies` section of the file. If you do 
+so you will need to e.g. run `uv sync` to install the new dependency.
+
 ####  Let's make our first smoothie! (Again)
 
 Now that we have our dependency installed, let's run the script again, 
@@ -166,6 +170,17 @@ uv run main.py
 | `uv remove <package>` | Removes a dependency from the project. |
 | `uv run ...` | Runs a command within the project's managed environment. |
 | `uv sync` | Installs dependencies from `uv.lock` to exactly recreate the environment. |
+
+
+| File              | What it does                                                                    |
+|-------------------|---------------------------------------------------------------------------------|
+| `pyproject.toml`  | Lists what your project needs (e.g. the python version or compatible libraries) |
+| `uv.lock`         | Remembers the exact version of every tiny detail so it's identical for everyone |
+| `.python-version` | Tells `uv` which Python version to use                                          |
+| `.venv`           | Contains the `uv` managed Pytyhon virtual environment                           |
+
+
+
 
 ### 🚀 Level Up
 
