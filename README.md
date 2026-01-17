@@ -242,17 +242,23 @@ from main import get_ingredients
 
 def test_get_ingredients():
     """get_ingredients successfully returns ingredients from the file"""
-    import tempfile
+    # Given: a recipe file with some ingredients
     content = "Apple\nBanana\nOrange\n"
     with tempfile.TemporaryDirectory() as tmp_path:
         recipe_file = Path(tmp_path) / "recipe.txt"
         recipe_file.write_text(content)
         expected = ["Apple", "Banana", "Orange"]
-        assert get_ingredients(recipe_file) == expected
+        # When: we call get_ingredients
+        result = get_ingredients(recipe_file)
+        # Then: we get the expected list of ingredients
+        assert result == expected
 ```
 
 💡The function name and docstring describe exactly what is being tested. 
-The test acts as a specification: choose names and descriptions carefully so others understand what the code should do.
+A good test is like a specification: choose names and descriptions carefully so others understand what the code should do.
+Also the test code should read like a short, clear story. Use the Given-When-Then structure to 
+make your tests easy to understand.
+
 
 ### Step 4 - Running Your Tests
 
@@ -265,16 +271,20 @@ uv run pytest
 - Right-click the test file or function and select to run Python tests.
 - You might need to configure PyCharm to use `pytest` as the test runner in _Preferences > Python > Tools > Integrated Tools > Default test runner: pytest_
 
-### Step 5 - See what happens when the things change
+### Step 5 - See what happens when things change
 
 Let's add another test for `get_ingredients` to check its behavior when the file does not exist:
 
 ```python
 def test_get_ingredients_file_does_not_exist():
     """get_ingredients returns an empty list of ingredients if the file does not exist"""
+    # Given: a path to a file that does not exist
     with tempfile.TemporaryDirectory() as tmp_path:
         non_existent_file = Path(tmp_path) / "non_existent.txt"
-        assert get_ingredients(non_existent_file) == []
+        # When: we call get_ingredients
+        result = get_ingredients(non_existent_file)
+        # Then: we get an empty list
+        assert result == []
 ```
 
 Add this test to your test file. Run your tests to make sure everything is green and works as expected.
@@ -321,13 +331,17 @@ It should look something like this:
 
 ```python
 def test_get_ingredients(tmp_path):
-    """get_ingredients successfully returns ingredients from the file"""
-    content = "Apple\nBanana\nOrange\n"
-    recipe_file = tmp_path / "recipe.txt"
-    recipe_file.write_text(content, encoding="utf-8")
-    
+    # Given: a recipe file with ingredients
+    content = "Apple\nBanana\nOrange"
+    recipe_file = tmp_path / "my_smoothie.txt"
+    recipe_file.write_text(content)
+
+    # When: get_ingredients is called
+    result = get_ingredients(recipe_file)
+
+    # Then: it returns the list of ingredients
     expected = ["Apple", "Banana", "Orange"]
-    assert get_ingredients(recipe_file) == expected
+    assert result == expected
 ```
 
 #### Design for Testability
@@ -358,14 +372,14 @@ Try to write a test for `make_smoothie` that calls the function and verifies tha
 ```python
 def test_make_smoothie_prints_added_ingredients(tmp_path, capsys):
   """make_smoothie prints all ingredients that were added to the smoothie to the console"""
-  # Setup
+  # Given
   recipe_file = tmp_path / "test.txt"
   recipe_file.write_text("Apple\nBanana\n")
   
-  # When: we make a Smoothie
+  # When: we make a smoothie
   make_smoothie(recipe_file)
 
-  # Then: All added ingredients are printed to the console
+  # Then: all added ingredients are printed to the console
   captured = capsys.readouterr()
   assert "Added Apple" in captured.out
   assert "Added Banana" in captured.out
@@ -393,15 +407,15 @@ from rich.console import Console
 def test_make_smoothie_prints_added_ingredients(tmp_path):
   """make_smoothie prints all ingredients that were added to the smoothie to the console"""
   
-  # Setup
+  # Given: a recipe file
   recipe_file = tmp_path / "test.txt"
   recipe_file.write_text("Apple\nBanana\n")
   
-  # When: we make a Smoothie
+  # When: we make a smoothie
   console = Console(record=True)
   make_smoothie(recipe_file, console)
   
-  # Then: All added ingredients are printed to the console
+  # Then: all added ingredients are printed to the console
   text_output = console.export_text()
   assert "Added Apple" in text_output
   assert "Added Banana" in text_output
@@ -427,20 +441,18 @@ import pyjokes
 def test_make_smoothie_prints_a_joke(tmp_path, monkeypatch):
     """make_smoothie prints a joke"""
     
-    # Setup
+    # Given: a recipe file
     recipe_file = tmp_path / "recipe.txt"
     recipe_file.write_text("Mango\n")
     # Mocking: Replace pyjokes.get_joke with a lambda that returns a fixed string
     test_joke = "A mock walks into a bar. The bartender asks, 'What can I get you?' The mock returns None."
     monkeypatch.setattr(pyjokes, "get_joke", lambda: "A mock walks into a bar. The bartender asks, 'What can I get you?' The mock returns None.")
 
-    # When
+    # When: we make a smoothie
     console = Console(record=True)
     make_smoothie(recipe_file, console)
 
-    # Then
+    # Then: a joke is told
     output = console.export_text()
     assert "The mock returns None" in output
 ```
-
-
