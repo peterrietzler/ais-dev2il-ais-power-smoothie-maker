@@ -1,5 +1,6 @@
 from pathlib import Path
 import time
+import pyjokes
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
@@ -9,15 +10,15 @@ def get_ingredients(recipe_file: Path) -> list[str]:
     with open(recipe_file, "r") as f:
         return [line.strip() for line in f.readlines() if line.strip()]
 
-def make_smoothie(recipe_file: Path) -> list[str]:
-    console = Console()
-
+def make_smoothie(recipe_file: Path, console: Console = Console()):
     ingredients = get_ingredients(recipe_file)
     if not ingredients:
         console.print(f"[bold red]No ingredients found in {recipe_file.name}![/bold red]")
         return ingredients
 
     console.print(f"[bold green]Starting to make: {recipe_file.stem.replace('_', ' ').title()}[/bold green]")
+    joke = pyjokes.get_joke()
+    console.print(f"[bold cyan]Let met enlighten you with a joke while you wait: {joke}[/bold cyan]\n")
 
     with Progress(
         SpinnerColumn(),
@@ -39,7 +40,6 @@ def make_smoothie(recipe_file: Path) -> list[str]:
 
     console.print(f"[bold yellow]✨ Smoothie '{recipe_file.stem.replace('_', ' ').title()}' is ready! Enjoy! ✨[/bold yellow]")
 
-    return ingredients
 
 def main():
     base_dir = Path(__file__).parent
