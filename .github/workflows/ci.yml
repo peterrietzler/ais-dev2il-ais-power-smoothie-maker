@@ -51,4 +51,10 @@ jobs:
         run: uv sync --frozen
 
       - name: Run tests
-        run: uv run pytest
+        run: uv run pytest --junitxml=junit.xml
+
+      - name: Create test result summary
+        uses: test-summary/action@v2
+        with:
+          paths: "junit.xml"
+        if: always()
